@@ -1,0 +1,48 @@
+li {
+  transition: color ease-in-out .15s, border ease-in-out .15s;
+
+  &:hover {
+    color: var(--orange-500);
+  }
+}
+
+nav li {
+  padding: 1.5rem 0;
+  border-bottom: 2px solid var(--gray-900);
+
+  &:hover {
+    border-bottom: 2px solid var(--orange-500);
+  }
+}
+
+#mobile-menu {
+  max-height: calc(100vh);
+  overflow-y: auto;
+}
+
+#mobile-menu-items {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 2rem;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+
+
+  #mobile-menu-item--logout {
+    font-size: 1.2rem;
+  }
+}
+
+#notification-button {
+  width: fit-content;
+  height: fit-content;
+  display: contents;
+}
+
+.no-scroll {
+  overflow: hidden;
+}

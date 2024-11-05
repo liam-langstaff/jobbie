@@ -1,0 +1,5 @@
+@use '../../../src/app/features/jobs/job-search-filter/job-search-filter.component.override.scss' as jobSearchFilter;
+
+html {
+  @include jobSearchFilter.job-search-filter-input-override;
+}

@@ -1,0 +1,35 @@
+@mixin job-search-filter-input-override {
+  app-job-search-filter {
+    .job-search-filter-component {
+      p-multiselect {
+        .p-multiselect {
+          background: transparent;
+        }
+
+        .p-multiselect-label {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+        }
+      }
+
+      p-autocomplete.custom-autocomplete {
+        //.p-autocomplete-input-token {
+        //  padding: 22px;
+        //}
+        //
+        //.p-autocomplete-multiple-container {
+        //  border-radius: 100px;
+        //  padding-left: 15px;
+        //}
+
+        .p-inputwrapper > input {
+          padding: 14px 20px;
+          border-radius: 0;
+          background: none;
+          color: white;
+        }
+      }
+    }
+  }
+}

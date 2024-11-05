@@ -1,1 +1,40 @@
-/* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import 'assets/styles/index';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer primeng;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer base {
+  button.p-button, input:where([type="button"]), input:where([type="reset"]), input:where([type="submit"]) {
+    background-color: revert-layer; // Reset to initial to use custom or PrimeNG styles
+  }
+
+  .p-inputtext:enabled:focus,
+  .p-dropdown:focus,
+  .p-selectbutton button:focus,
+  .p-button:focus,
+  .p-password input:focus,
+  .p-autocomplete input:enabled:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@layer primeng;
