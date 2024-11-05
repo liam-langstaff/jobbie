@@ -67,8 +67,6 @@ export class JobSearchFilterComponent {
   selectedLocation: any[] | undefined;
   selectedJobTypes: any[] | undefined;
   salaryRange: number[] = [20000, 80000]; // Default salary range
-  private sliderAdjustments = 0;
-  private adjustmentSubject = new Subject<void>();
 
   jobTypes = fakeJobTypes;
 
@@ -198,7 +196,6 @@ export class JobSearchFilterComponent {
     jobType: string[],
     salary: number[],
   ): Filter {
-    console.log(role, location, jobType, salary);
     return {
       role: role,
       location: location,
