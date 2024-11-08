@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { JobCardComponent } from '../job-card/job-card.component';
 import { JobCard } from '../interfaces/job-card';
 
@@ -11,4 +11,9 @@ import { JobCard } from '../interfaces/job-card';
 })
 export class JobCardListingComponent {
   jobs = input<JobCard[]>();
+  onSelectJob = output<number>();
+
+  previewJob(id: number) {
+    this.onSelectJob.emit(id);
+  }
 }

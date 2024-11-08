@@ -5,13 +5,14 @@
 
   </div>
   <div class="container mx-auto px-4 sticky top-2">
-    <div class="filters flex flex-wrap  border border-gray-700 rounded w-full items-stretch">
+    <form [formGroup]="jobSearchForm"
+          class="filters flex flex-wrap  border border-gray-700 rounded w-full items-stretch">
       <!-- Search Job Title or Keyword -->
       <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
         <div class="flex items-center">
           <span class="pi pi-search mr-2"></span>
           <p-autoComplete
-            [(ngModel)]="selectedRoles"
+            formControlName="selectedRoles"
             [suggestions]="searchedRole() || []"
             (completeMethod)="searchRole($event)"
             (onSelect)="onRoleSelect($event)"
@@ -26,7 +27,7 @@
         <div class="flex items-center">
           <span class="pi pi-map-marker mr-2"></span>
           <p-autoComplete
-            [(ngModel)]="selectedLocation"
+            formControlName="selectedLocation"
             [suggestions]="searchedLocation() || []"
             (completeMethod)="searchLocation($event)"
             (onSelect)="onLocationSelect($event)"
@@ -41,12 +42,12 @@
         <div class="flex items-center">
           <span class="pi pi-briefcase mr-2"></span>
           <p-multiSelect
-            [(ngModel)]="selectedJobTypes"
+            formControlName="selectedJobTypes"
             [options]="jobTypes"
             optionLabel="label"
             display="chip"
             placeholder="Select job types"
-            (ngModelChange)="onJobTypeSelect($event)"
+            (onChange)="onJobTypeSelect($event)"
             class="custom-multiselect text-black w-full lg:w-auto">
           </p-multiSelect>
         </div>
@@ -66,7 +67,7 @@
           <div class="p-4 w-64">
             <div class="flex items-center w-full">
               <p-slider
-                [(ngModel)]="salaryRange"
+                formControlName="salaryRange"
                 [range]="true"
                 [min]="0"
                 [max]="100000"
@@ -76,23 +77,29 @@
                 (onSlideEnd)="opSalary.hide()">
               </p-slider>
             </div>
-            <div class="mt-2 text-xs text-gray-500">
-              <span>{{ salaryRange[0] | currency }}</span> - <span>{{ salaryRange[1] | currency }}</span>
-            </div>
+            @if (salaryRangeControl.value > 1) {
+              <div class="mt-2 text-xs text-gray-500">
+                <span>{{ salaryRangeControl.value[0] | currency }}</span> -
+                <span>{{ salaryRangeControl.value[1] | currency }}</span>
+              </div>
+            }
+
           </div>
         </p-overlayPanel>
       </div>
       <!-- Search Button -->
       <div class="p-4 w-full xl:w-auto ml-auto flex items-center">
+        <p-button (click)="resetFilters()" [disabled]="!(resetActive$$ | async)" icon="pi pi-times" [rounded]="true"
+                  severity="danger" [outlined]="true"/>
         <button
           (click)="searchJobs()"
-          [disabled]="!filters() || !selectedRoles || !selectedLocation || !selectedJobTypes || !salaryRange"
+          [disabled]="!filters()"
           pButton
           pRipple
           label="Search"
           class="p-button-primary w-full lg:w-auto">
         </button>
       </div>
-    </div>
+    </form>
   </div>
 </section>

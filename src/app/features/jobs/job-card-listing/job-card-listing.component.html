@@ -1,7 +1,7 @@
 @if (jobs()) {
   <div class="flex flex-col gap-4">
     @for (job of jobs(); track job.id) {
-      <app-job-card [job]="job"></app-job-card>
+      <app-job-card (click)="previewJob(job.id)" [job]="job"></app-job-card>
     }
   </div>
 }
