@@ -31,5 +31,15 @@
         }
       }
     }
+
+    .additional-filters {
+      p-dropdown .p-dropdown {
+        background: transparent !important;
+
+        span.p-inputtext {
+          color: white !important;
+        }
+      }
+    }
   }
 }

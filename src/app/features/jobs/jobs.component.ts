@@ -8,9 +8,10 @@ import {
   fakeFullJobDetails,
   fakeJobListingCards,
 } from '../../shared/data/fake-data';
-import { map, startWith, Subject, tap } from 'rxjs';
+import {BehaviorSubject, delay, map, startWith, Subject, tap} from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobPreviewComponent } from './job-preview/job-preview.component';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-jobs',
@@ -19,11 +20,14 @@ import { JobPreviewComponent } from './job-preview/job-preview.component';
     JobSearchFilterComponent,
     JobCardListingComponent,
     JobPreviewComponent,
+    AsyncPipe,
   ],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.scss',
 })
 export class JobsComponent {
+  public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
   // TODO: Add filtering to BE
   private readonly _filteredJobs$$: Subject<Filter> = new Subject();
   private readonly _filteredJobs$ = this._filteredJobs$$.pipe(
@@ -32,25 +36,25 @@ export class JobsComponent {
       return fakeJobListingCards.filter((job) => {
         const roleMatches = role
           ? job.title.toLowerCase().includes(role.toLowerCase())
-          : true; // Skip filter if role is null
+          : true;
 
         const locationMatches = location
           ? job.location.toLowerCase().includes(location.toLowerCase())
-          : true; // Skip filter if location is null
+          : true;
 
         const jobTypeMatches =
           jobTypes && jobTypes.length > 0
             ? jobTypes
                 .map((jt) => jt.toLowerCase())
                 .includes(job.jobType.toLowerCase())
-            : true; // Skip filter if jobTypes is null or empty
+            : true;
 
         const salaryMatches = salaryRange
           ? (salaryRange.low === null ||
               job.salary.amount[0] >= salaryRange.low) &&
             (salaryRange.high === null ||
               job.salary.amount[1] <= salaryRange.high)
-          : true; // Skip filter if salaryRange is null
+          : true;
 
         return (
           roleMatches && locationMatches && jobTypeMatches && salaryMatches
@@ -59,14 +63,17 @@ export class JobsComponent {
     }),
     tap((filteredJobs) => {
       if (filteredJobs.length > 0) {
-        this.selectedJob$$.next(filteredJobs[0].id); // Select the first job if any job matches
+        this.selectedJob$$.next(filteredJobs[0].id); // selectt the first job if any job matches
       }
     }),
   );
 
   selectedJob$$ = new Subject<number>();
   selectedJob$ = this.selectedJob$$.pipe(
+    tap(() => this.isLoading$.next(true)),
+    delay(1000),
     map((jobId) => fakeFullJobDetails.find((job) => job.id === jobId)),
+    tap(() => this.isLoading$.next(false)),
     startWith(fakeFullJobDetails[0]),
   );
 

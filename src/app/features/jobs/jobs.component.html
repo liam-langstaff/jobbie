@@ -7,7 +7,7 @@
                               [jobs]="filteredJobs() ?? fakeJobListingCards"></app-job-card-listing>
       </div>
       <div class="md:col-span-2">
-        <app-job-preview [job]="selectedJob()"></app-job-preview>
+        <app-job-preview [isLoading]="(isLoading$ | async) ?? false" [job]="selectedJob()"></app-job-preview>
       </div>
     </div>
   </div>

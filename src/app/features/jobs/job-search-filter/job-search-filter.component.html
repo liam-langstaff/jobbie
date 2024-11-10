@@ -5,101 +5,152 @@
 
   </div>
   <div class="container mx-auto px-4 sticky top-2">
-    <form [formGroup]="jobSearchForm"
-          class="filters flex flex-wrap  border border-gray-700 rounded w-full items-stretch">
-      <!-- Search Job Title or Keyword -->
-      <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
-        <div class="flex items-center">
-          <span class="pi pi-search mr-2"></span>
-          <p-autoComplete
-            formControlName="selectedRoles"
-            [suggestions]="searchedRole() || []"
-            (completeMethod)="searchRole($event)"
-            (onSelect)="onRoleSelect($event)"
-            [placeholder]="'Search job title or keyword'"
-            optionLabel="label"
-            class="custom-autocomplete text-black w-full lg:w-auto">
-          </p-autoComplete>
-        </div>
-      </div>
-      <!-- Search Location -->
-      <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
-        <div class="flex items-center">
-          <span class="pi pi-map-marker mr-2"></span>
-          <p-autoComplete
-            formControlName="selectedLocation"
-            [suggestions]="searchedLocation() || []"
-            (completeMethod)="searchLocation($event)"
-            (onSelect)="onLocationSelect($event)"
-            [placeholder]="'Search country or city'"
-            optionLabel="label"
-            class="custom-autocomplete text-black w-full lg:w-auto">
-          </p-autoComplete>
-        </div>
-      </div>
-      <!-- Search Job Type using MultiSelect -->
-      <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
-        <div class="flex items-center">
-          <span class="pi pi-briefcase mr-2"></span>
-          <p-multiSelect
-            formControlName="selectedJobTypes"
-            [options]="jobTypes"
-            optionLabel="label"
-            display="chip"
-            placeholder="Select job types"
-            (onChange)="onJobTypeSelect($event)"
-            class="custom-multiselect text-black w-full lg:w-auto">
-          </p-multiSelect>
-        </div>
-      </div>
-      <!-- Salary Range with Heading -->
-      <div class="p-4 w-full xl:w-auto flex items-center">
-        <!--        <label class="block text-gray-400 text-sm mb-1">Salary Range</label>-->
-        <button
-          pButton
-          pRipple
-          [label]="getSalaryRangeLabel()"
-          (click)="opSalary.toggle($event)"
-          class="p-button-outlined w-full lg:w-auto">
-        </button>
-        <!-- Overlay Panel containing the slider -->
-        <p-overlayPanel #opSalary [dismissable]="true">
-          <div class="p-4 w-64">
-            <div class="flex items-center w-full">
-              <p-slider
-                formControlName="salaryRange"
-                [range]="true"
-                [min]="0"
-                [max]="100000"
-                [step]="1000"
-                class="w-full"
-                (onChange)="setSalaryRange($event)"
-                (onSlideEnd)="opSalary.hide()">
-              </p-slider>
-            </div>
-            @if (salaryRangeControl.value > 1) {
-              <div class="mt-2 text-xs text-gray-500">
-                <span>{{ salaryRangeControl.value[0] | currency }}</span> -
-                <span>{{ salaryRangeControl.value[1] | currency }}</span>
-              </div>
-            }
-
+    <form [formGroup]="jobSearchForm">
+      <div class="filters flex flex-wrap  border border-gray-700 rounded w-full items-stretch">
+        <!-- Search Job Title or Keyword -->
+        <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
+          <div class="flex items-center">
+            <span class="pi pi-search mr-2"></span>
+            <p-autoComplete
+              formControlName="selectedRoles"
+              [suggestions]="searchedRole() || []"
+              (completeMethod)="searchRole($event)"
+              (onSelect)="onRoleSelect($event)"
+              [placeholder]="'Search job title or keyword'"
+              optionLabel="label"
+              class="custom-autocomplete text-black w-full lg:w-auto">
+            </p-autoComplete>
           </div>
-        </p-overlayPanel>
+        </div>
+        <!-- Search Location -->
+        <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
+          <div class="flex items-center">
+            <span class="pi pi-map-marker mr-2"></span>
+            <p-autoComplete
+              formControlName="selectedLocation"
+              [suggestions]="searchedLocation() || []"
+              (completeMethod)="searchLocation($event)"
+              (onSelect)="onLocationSelect($event)"
+              [placeholder]="'Search country or city'"
+              optionLabel="label"
+              class="custom-autocomplete text-black w-full lg:w-auto">
+            </p-autoComplete>
+          </div>
+        </div>
+        <!-- Search Job Type using MultiSelect -->
+        <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
+          <div class="flex items-center">
+            <span class="pi pi-briefcase mr-2"></span>
+            <p-multiSelect
+              formControlName="selectedJobTypes"
+              [options]="jobTypes"
+              optionLabel="label"
+              display="chip"
+              placeholder="Select job types"
+              (onChange)="onJobTypeSelect($event)"
+              class="custom-multiselect text-black w-full lg:w-auto">
+            </p-multiSelect>
+          </div>
+        </div>
+        <!-- Salary Range with Heading -->
+        <div class="p-4 w-full xl:w-auto flex items-center">
+          <!--        <label class="block text-gray-400 text-sm mb-1">Salary Range</label>-->
+          <button
+            pButton
+            pRipple
+            [label]="getSalaryRangeLabel()"
+            (click)="opSalary.toggle($event)"
+            class="p-button-outlined w-full lg:w-auto">
+          </button>
+          <!-- Overlay Panel containing the slider -->
+          <p-overlayPanel #opSalary [dismissable]="true">
+            <div class="p-4 w-64">
+              <div class="flex items-center w-full">
+                <p-slider
+                  formControlName="salaryRange"
+                  [range]="true"
+                  [min]="0"
+                  [max]="100000"
+                  [step]="1000"
+                  class="w-full"
+                  (onChange)="setSalaryRange($event)"
+                  (onSlideEnd)="opSalary.hide()">
+                </p-slider>
+              </div>
+              @if (salaryRangeControl.value > 1) {
+                <div class="mt-2 text-xs text-gray-500">
+                  <span>{{ salaryRangeControl.value[0] | currency }}</span> -
+                  <span>{{ salaryRangeControl.value[1] | currency }}</span>
+                </div>
+              }
+
+            </div>
+          </p-overlayPanel>
+        </div>
+        <!-- Search Button -->
+        <div class="p-4 w-full xl:w-auto ml-auto flex items-center">
+          <p-button (click)="resetFilters()" [disabled]="!(resetActive$$ | async)" icon="pi pi-times" [rounded]="true"
+                    severity="danger" [outlined]="true"/>
+          <button
+            (click)="searchJobs()"
+            [disabled]="!filters()"
+            pButton
+            pRipple
+            label="Search"
+            class="p-button-primary w-full lg:w-auto">
+          </button>
+        </div>
       </div>
-      <!-- Search Button -->
-      <div class="p-4 w-full xl:w-auto ml-auto flex items-center">
-        <p-button (click)="resetFilters()" [disabled]="!(resetActive$$ | async)" icon="pi pi-times" [rounded]="true"
-                  severity="danger" [outlined]="true"/>
-        <button
-          (click)="searchJobs()"
-          [disabled]="!filters()"
-          pButton
-          pRipple
-          label="Search"
-          class="p-button-primary w-full lg:w-auto">
-        </button>
-      </div>
+
+      @if(true) {
+        <div  class="additional-filters filters gap-4 flex flex-wrap w-full items-stretch mt-4">
+          <div class="w-full xl:w-auto flex items-center">
+            <div class="flex items-center">
+              <p-dropdown
+                [options]="fakeLocations"
+                optionLabel="label"
+                placeholder="Date posted" />
+            </div>
+          </div>
+
+          <div class="w-full xl:w-auto flex items-center">
+            <div class="flex items-center">
+              <p-dropdown
+                [options]="fakeLocations"
+                optionLabel="label"
+                placeholder="Posted by" />
+            </div>
+          </div>
+
+          <div class="w-full xl:w-auto flex items-center">
+            <div class="flex items-center">
+              <p-dropdown
+                [options]="fakeLocations"
+                optionLabel="label"
+                placeholder="Education level" />
+            </div>
+          </div>
+
+          <div class="w-full xl:w-auto flex items-center">
+            <div class="flex items-center">
+              <p-dropdown
+                [options]="fakeLocations"
+                optionLabel="label"
+                placeholder="Industry" />
+            </div>
+          </div>
+
+          <div class="w-full xl:w-auto flex items-center">
+            <div class="flex items-center">
+              <p-dropdown
+                [options]="fakeLocations"
+                optionLabel="label"
+                placeholder="Company" />
+            </div>
+          </div>
+        </div>
+      }
+
     </form>
   </div>
 </section>

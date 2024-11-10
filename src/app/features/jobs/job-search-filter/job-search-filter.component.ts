@@ -1,7 +1,7 @@
 import {
-  Component,
+  Component, effect,
   EventEmitter,
-  inject,
+  inject, Input, input,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -21,7 +21,7 @@ import {
   combineLatest,
   debounceTime,
   filter,
-  map,
+  map, skip,
   startWith,
   Subject,
   tap,
@@ -38,6 +38,7 @@ import {
   fakeLocations,
   fakeRoles,
 } from '../../../shared/data/fake-data';
+import {DropdownModule} from 'primeng/dropdown';
 
 export interface Option {
   label: string;
@@ -69,6 +70,7 @@ export interface Filter {
     OverlayPanelModule,
     AsyncPipe,
     ReactiveFormsModule,
+    DropdownModule,
   ],
   templateUrl: './job-search-filter.component.html',
   styleUrl: './job-search-filter.component.scss',
@@ -77,25 +79,15 @@ export class JobSearchFilterComponent {
   @Output() filtersChanged = new EventEmitter<Filter>();
   @ViewChild('opSalary') opSalary: OverlayPanel | undefined;
 
+
   private _fb: FormBuilder = inject(FormBuilder);
 
-  // selectedRoles: any[] | undefined;
-  // selectedLocation: any[] | undefined;
-  // selectedJobTypes: any[] | undefined;
-  // salaryRange: number[] = [20000, 80000]; // Default salary range
-
   jobSearchForm = this._fb.group({
-    selectedRoles: this._fb.control<string[]>(['']),
-    selectedLocation: this._fb.control<string[]>(['']),
-    selectedJobTypes: this._fb.control<string[]>(['']),
+    selectedRoles: this._fb.control<string[]>([]),
+    selectedLocation: this._fb.control<string[]>([]),
+    selectedJobTypes: this._fb.control<string[]>([]),
     salaryRange: this._fb.control<number[]>([20000, 80000]),
   });
-
-  constructor() {
-    this.jobSearchForm.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
-  }
 
   jobTypes = fakeJobTypes;
 
@@ -107,8 +99,16 @@ export class JobSearchFilterComponent {
   private readonly _resetFilters$$ = new Subject<void>();
   private readonly _resetFilters$ = this._resetFilters$$.pipe(
     tap(() => {
-      this.filtersChanged.emit(this.mapToFilter(null, null, null, null));
+      this.jobSearchForm.reset({
+        selectedRoles: [],
+        selectedLocation: [],
+        selectedJobTypes: [],
+        salaryRange: [20000, 80000],
+      })
     }),
+    filter((res) => res !== undefined),
+    tap(() => this.searchJobs()),
+    startWith(undefined)
   );
 
   private readonly _searchRole$$: Subject<AutoCompleteCompleteEvent> =
@@ -128,7 +128,7 @@ export class JobSearchFilterComponent {
     new Subject<AutoCompleteCompleteEvent>();
 
   private readonly _searchedLocation$ =
-    this.selectedLocationControl.valueChanges.pipe(
+    this._searchLocation$$.pipe(
       debounceTime(150),
       filter((event) => event?.query?.length > 2),
       map((event) =>
@@ -185,8 +185,7 @@ export class JobSearchFilterComponent {
         if (Array.isArray(event)) {
           return event.map((jobType: Option) => jobType.value);
         } else {
-          // If not an array, return null or an empty array based on required behavior
-          return null;
+          return [];
         }
       }),
     );
@@ -196,14 +195,18 @@ export class JobSearchFilterComponent {
     this._selectedLocation$,
     this._selectJobTypes$,
     this._salaryRange$,
+    this._resetFilters$,
   ]).pipe(
-    tap(() => this.resetActive$$.next(true)),
+    tap(([role, location, jobType, salary,]) => {
+      this.resetActive$$.next(true);
+      console.log(role, location, jobType, salary);
+    }),
     map(([role, location, jobType, salary]) =>
       this.mapToFilter(
-        role?.value ?? null,
-        location?.value ?? null,
-        jobType?.length ? jobType : null,
-        salary ?? null,
+        role,
+        location,
+        jobType,
+        salary,
       ),
     ),
   );
@@ -258,19 +261,19 @@ export class JobSearchFilterComponent {
     jobType: string[] | null,
     salary: number[] | null,
   ): Filter {
-    return {
+    return <Filter>{
       role: role,
       location: location,
       jobTypes: jobType,
-      salaryRange: {
+      salaryRange: !(salary) || salary[0] && salary[1] ? {
         low: salary ? salary[0] : null,
         high: salary ? salary[1] : null,
-      },
+      } : null,
     };
   }
 
   searchJobs() {
-    console.log(this.filters());
+    console.log(this.filters(), 'sausage');
     this.filtersChanged.next(<Filter>this.filters());
   }
 
@@ -281,13 +284,7 @@ export class JobSearchFilterComponent {
   resetFilters() {
     // reset all filters
     // change this to be more reactive
-    // this._resetFilters$$.next();
-    this.jobSearchForm.reset({
-      selectedRoles: [''],
-      selectedLocation: [''],
-      selectedJobTypes: [],
-      salaryRange: [20000, 100000],
-    });
+    this._resetFilters$$.next();
   }
 
   get selectedRolesControl(): FormControl {
@@ -305,4 +302,6 @@ export class JobSearchFilterComponent {
   get salaryRangeControl(): FormControl {
     return this.jobSearchForm.get('salaryRange') as FormControl;
   }
+
+  protected readonly fakeLocations = fakeLocations;
 }
