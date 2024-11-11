@@ -1,7 +1,7 @@
 import {
-  Component, effect,
+  Component,
   EventEmitter,
-  inject, Input, input,
+  inject,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -21,7 +21,7 @@ import {
   combineLatest,
   debounceTime,
   filter,
-  map, skip,
+  map,
   startWith,
   Subject,
   tap,
@@ -38,7 +38,7 @@ import {
   fakeLocations,
   fakeRoles,
 } from '../../../shared/data/fake-data';
-import {DropdownModule} from 'primeng/dropdown';
+import { DropdownModule } from 'primeng/dropdown';
 
 export interface Option {
   label: string;
@@ -79,7 +79,6 @@ export class JobSearchFilterComponent {
   @Output() filtersChanged = new EventEmitter<Filter>();
   @ViewChild('opSalary') opSalary: OverlayPanel | undefined;
 
-
   private _fb: FormBuilder = inject(FormBuilder);
 
   jobSearchForm = this._fb.group({
@@ -104,11 +103,11 @@ export class JobSearchFilterComponent {
         selectedLocation: [],
         selectedJobTypes: [],
         salaryRange: [20000, 80000],
-      })
+      });
     }),
     filter((res) => res !== undefined),
     tap(() => this.searchJobs()),
-    startWith(undefined)
+    startWith(undefined),
   );
 
   private readonly _searchRole$$: Subject<AutoCompleteCompleteEvent> =
@@ -127,16 +126,15 @@ export class JobSearchFilterComponent {
   private readonly _searchLocation$$: Subject<AutoCompleteCompleteEvent> =
     new Subject<AutoCompleteCompleteEvent>();
 
-  private readonly _searchedLocation$ =
-    this._searchLocation$$.pipe(
-      debounceTime(150),
-      filter((event) => event?.query?.length > 2),
-      map((event) =>
-        this._locations.filter((location) =>
-          location.label.toLowerCase().includes(event.query.toLowerCase()),
-        ),
+  private readonly _searchedLocation$ = this._searchLocation$$.pipe(
+    debounceTime(150),
+    filter((event) => event?.query?.length > 2),
+    map((event) =>
+      this._locations.filter((location) =>
+        location.label.toLowerCase().includes(event.query.toLowerCase()),
       ),
-    );
+    ),
+  );
 
   private readonly _salaryRange$$: Subject<SliderChangeEvent> =
     new Subject<SliderChangeEvent>();
@@ -197,17 +195,12 @@ export class JobSearchFilterComponent {
     this._salaryRange$,
     this._resetFilters$,
   ]).pipe(
-    tap(([role, location, jobType, salary,]) => {
+    tap(([role, location, jobType, salary]) => {
       this.resetActive$$.next(true);
       console.log(role, location, jobType, salary);
     }),
     map(([role, location, jobType, salary]) =>
-      this.mapToFilter(
-        role,
-        location,
-        jobType,
-        salary,
-      ),
+      this.mapToFilter(role, location, jobType, salary),
     ),
   );
 
@@ -215,16 +208,6 @@ export class JobSearchFilterComponent {
 
   public readonly searchedRole = toSignal(this._searchedRole$);
   public readonly searchedLocation = toSignal(this._searchedLocation$);
-
-  resetFilterModels() {
-    this._resetFilters$$.next();
-    this.jobSearchForm.reset({
-      selectedRoles: [''],
-      selectedLocation: [''],
-      selectedJobTypes: [],
-      salaryRange: [20000, 100000],
-    });
-  }
 
   searchRole($event: AutoCompleteCompleteEvent) {
     this._searchRole$$.next($event);
@@ -265,15 +248,17 @@ export class JobSearchFilterComponent {
       role: role,
       location: location,
       jobTypes: jobType,
-      salaryRange: !(salary) || salary[0] && salary[1] ? {
-        low: salary ? salary[0] : null,
-        high: salary ? salary[1] : null,
-      } : null,
+      salaryRange:
+        !salary || (salary[0] && salary[1])
+          ? {
+              low: salary ? salary[0] : null,
+              high: salary ? salary[1] : null,
+            }
+          : null,
     };
   }
 
   searchJobs() {
-    console.log(this.filters(), 'sausage');
     this.filtersChanged.next(<Filter>this.filters());
   }
 

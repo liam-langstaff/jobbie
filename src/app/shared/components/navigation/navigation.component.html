@@ -12,7 +12,7 @@
                                                                   fill="#3064E8"></path></svg>
       </span>
       <ul aria-label="primary navigation" class="items-center gap-7 font-bold hidden md:flex">
-        <li><a href="#">Find Job</a></li>
+        <li [routerLink]="['jobs']" routerLinkActive="active">Find Job</li>
         <li><a href="#">Hiring</a></li>
       </ul>
     </div>
@@ -37,7 +37,7 @@
        class="text-white bg-gray-900 absolute w-full top-0 left-0 bg-gray-900 z-10 overflow-hidden"
        [style.height]="'calc(100% - ' + navHeight + 'px)'" [style.top]="navHeight + 'px'">
     <ul aria-label="mobile navigation" id="mobile-menu-items">
-      <li><h2><a href="#">Find Job</a></h2></li>
+      <li><h2><a [routerLink]="['jobs']" routerLinkActive="active">Find Job</a></h2></li>
       <li><h2><a href="#">Hiring</a></h2></li>
       <li id="mobile-menu-item--logout" class="mt-6">
         <h2>

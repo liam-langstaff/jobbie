@@ -1,7 +1,8 @@
 li {
   transition: color ease-in-out .15s, border ease-in-out .15s;
 
-  &:hover {
+  &:hover, &.active {
+    cursor: pointer;
     color: var(--orange-500);
   }
 }
@@ -10,7 +11,7 @@ nav li {
   padding: 1.5rem 0;
   border-bottom: 2px solid var(--gray-900);
 
-  &:hover {
+  &:hover, &.active {
     border-bottom: 2px solid var(--orange-500);
   }
 }

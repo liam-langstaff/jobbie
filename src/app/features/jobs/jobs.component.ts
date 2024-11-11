@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   Filter,
   JobSearchFilterComponent,
@@ -8,10 +8,11 @@ import {
   fakeFullJobDetails,
   fakeJobListingCards,
 } from '../../shared/data/fake-data';
-import {BehaviorSubject, delay, map, startWith, Subject, tap} from 'rxjs';
+import { BehaviorSubject, delay, map, Subject, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobPreviewComponent } from './job-preview/job-preview.component';
-import {AsyncPipe} from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { JobsStore } from './state/jobs.store';
 
 @Component({
   selector: 'app-jobs',
@@ -26,6 +27,8 @@ import {AsyncPipe} from '@angular/common';
   styleUrl: './jobs.component.scss',
 })
 export class JobsComponent {
+  readonly store = inject(JobsStore);
+
   public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   // TODO: Add filtering to BE
@@ -62,9 +65,9 @@ export class JobsComponent {
       });
     }),
     tap((filteredJobs) => {
-      if (filteredJobs.length > 0) {
-        this.selectedJob$$.next(filteredJobs[0].id); // selectt the first job if any job matches
-      }
+      // if (filteredJobs.length > 0) {
+      this.selectedJob$$.next(filteredJobs[0]?.id); // selectt the first job if any job matches
+      // }
     }),
   );
 
@@ -72,9 +75,12 @@ export class JobsComponent {
   selectedJob$ = this.selectedJob$$.pipe(
     tap(() => this.isLoading$.next(true)),
     delay(1000),
-    map((jobId) => fakeFullJobDetails.find((job) => job.id === jobId)),
+    map((jobId) => {
+      const job = fakeFullJobDetails.find((job) => job.id === jobId);
+      this.store.updateSelectedJobId(job?.id as number);
+      return job;
+    }),
     tap(() => this.isLoading$.next(false)),
-    startWith(fakeFullJobDetails[0]),
   );
 
   selectedJob = toSignal(this.selectedJob$);
