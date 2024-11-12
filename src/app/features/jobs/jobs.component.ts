@@ -64,8 +64,11 @@ export class JobsComponent {
         );
       });
     }),
+    startWith(fakeJobListingCards),
     tap((filteredJobs) => {
       // if (filteredJobs.length > 0) {
+      this.store.setJobCards(filteredJobs);
+      console.log(this.store.jobs());
       this.selectedJob$$.next(filteredJobs[0]?.id); // selectt the first job if any job matches
       // }
     }),

@@ -18,5 +18,8 @@ export const JobsStore = signalStore(
     updateSelectedJobId(jobId: number): void {
       patchState(store, () => ({ selectedJobId: jobId }));
     },
+    setJobCards(jobs: JobCard[]): void {
+      patchState(store, () => ({ jobs: [...jobs] }));
+    },
   })),
 );

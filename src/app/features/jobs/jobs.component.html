@@ -7,7 +7,7 @@
         <div class="overflow-y-auto h-full">
           <app-job-card-listing
             (onSelectJob)="previewJob($event)"
-            [jobs]="filteredJobs() ?? fakeJobListingCards">
+            [jobs]="filteredJobs()">
           </app-job-card-listing>
         </div>
       </div>
