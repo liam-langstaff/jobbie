@@ -113,6 +113,76 @@ export const fakeJobListingCards: JobCard[] = [
       amount: [60000, 80000],
     },
   },
+  {
+    id: 1,
+    title: 'Senior Front-end Developer',
+    company: 'Tech Innovators Inc.',
+    location: 'London, UK',
+    date: new Date('2023-10-10'),
+    jobType: 'Contract',
+    description:
+      'We are looking for a senior frontend developer with expertise in Angular to lead the development of our new web application.',
+    salary: {
+      currency: 'GBP',
+      amount: [60000, 75000],
+    },
+  },
+  {
+    id: 2,
+    title: 'Backend Developer',
+    company: 'Global Solutions Ltd.',
+    location: 'Manchester, UK',
+    date: new Date('2023-09-15'),
+    jobType: 'Permanent',
+    description:
+      'Join our backend team to build and maintain robust APIs supporting millions of users.',
+    salary: {
+      currency: 'GBP',
+      amount: [50000, 65000],
+    },
+  },
+  {
+    id: 3,
+    title: 'UI/UX Designer',
+    company: 'Creative Minds Studio',
+    location: 'Bristol, UK',
+    date: new Date('2023-09-25'),
+    jobType: 'Contract',
+    description:
+      'We are seeking a creative UI/UX designer to enhance user experiences across our digital platforms.',
+    salary: {
+      currency: 'GBP',
+      amount: [40000, 55000],
+    },
+  },
+  {
+    id: 4,
+    title: 'DevOps Engineer',
+    company: 'Cloud Solutions Group',
+    location: 'Edinburgh, UK',
+    date: new Date('2023-09-20'),
+    jobType: 'Permanent',
+    description:
+      'Looking for an experienced DevOps engineer to streamline our cloud infrastructure and deployment processes.',
+    salary: {
+      currency: 'GBP',
+      amount: [55000, 70000],
+    },
+  },
+  {
+    id: 5,
+    title: 'Data Scientist',
+    company: 'Analytics Hub',
+    location: 'Birmingham, UK',
+    date: new Date('2023-09-30'),
+    jobType: 'Contract',
+    description:
+      'Join our data team to derive actionable insights from complex datasets and drive business decisions.',
+    salary: {
+      currency: 'GBP',
+      amount: [60000, 80000],
+    },
+  },
 ];
 
 export const fakeFullJobDetails: JobDetails[] = [

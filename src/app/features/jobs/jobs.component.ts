@@ -8,7 +8,7 @@ import {
   fakeFullJobDetails,
   fakeJobListingCards,
 } from '../../shared/data/fake-data';
-import { BehaviorSubject, delay, map, Subject, tap } from 'rxjs';
+import { BehaviorSubject, delay, map, startWith, Subject, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobPreviewComponent } from './job-preview/job-preview.component';
 import { AsyncPipe } from '@angular/common';
@@ -73,6 +73,7 @@ export class JobsComponent {
 
   selectedJob$$ = new Subject<number>();
   selectedJob$ = this.selectedJob$$.pipe(
+    startWith(fakeFullJobDetails[0].id),
     tap(() => this.isLoading$.next(true)),
     delay(1000),
     map((jobId) => {
