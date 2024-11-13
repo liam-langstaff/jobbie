@@ -21,8 +21,9 @@ export const JobsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods((store) => ({
-    updateSelectedJobId(jobId: number): void {
+    setSelectedJobId(jobId: number): void {
       patchState(store, () => ({ isLoading: true, selectedJobId: jobId }));
+      this.fetchJobDetails(jobId);
     },
     setJobCards(jobs: JobCard[]): void {
       patchState(store, () => ({ jobs: [...jobs] }));
@@ -31,13 +32,14 @@ export const JobsStore = signalStore(
       patchState(store, { selectedJobDetails: details, isLoading: false });
     },
     fetchJobDetails(jobId: number): void {
+      // make api call here
       const selectedJobDetails = fakeFullJobDetails.find(
         (job) => job.id === jobId,
       );
       if (selectedJobDetails) {
         setTimeout(() => {
           this.setSelectedJobDetails(selectedJobDetails);
-        }, 2000);
+        }, 1000);
       }
     },
   })),

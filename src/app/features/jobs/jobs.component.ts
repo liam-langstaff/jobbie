@@ -8,7 +8,6 @@ import { fakeJobListingCards } from '../../shared/data/fake-data';
 import { BehaviorSubject, map, startWith, Subject, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobPreviewComponent } from './job-preview/job-preview.component';
-import { AsyncPipe, JsonPipe } from '@angular/common';
 import { JobsStore } from './state/jobs.store';
 
 @Component({
@@ -18,8 +17,6 @@ import { JobsStore } from './state/jobs.store';
     JobSearchFilterComponent,
     JobCardListingComponent,
     JobPreviewComponent,
-    AsyncPipe,
-    JsonPipe,
   ],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.scss',
@@ -64,32 +61,13 @@ export class JobsComponent {
     }),
     startWith(fakeJobListingCards),
     tap((filteredJobs) => {
-      // if (filteredJobs.length > 0) {
       this.store.setJobCards(filteredJobs);
-      console.log(this.store.jobs());
-      this.selectedJob$$.next(filteredJobs[0]?.id); // selectt the first job if any job matches
-      // }
+      this.store.setSelectedJobId(filteredJobs[0]?.id);
     }),
   );
 
   selectedJob$$ = new Subject<number>();
-  // selectedJob$ = this.selectedJob$$.pipe(
-  //   startWith(fakeFullJobDetails[0].id),
-  //   tap(() => this.isLoading$.next(true)),
-  //   delay(1000),
-  //   map((jobId) => {
-  //     const job = fakeFullJobDetails.find((job) => job.id === jobId);
-  //     this.store.updateSelectedJobId(job?.id as number);
-  //     return job;
-  //   }),
-  //   tap(() => this.isLoading$.next(false)),
-  // );
 
-  selectedJob$ = this.selectedJob$$.pipe(
-    tap((jobId) => this.store.fetchJobDetails(jobId)),
-  );
-
-  selectedJob = toSignal(this.selectedJob$);
   filteredJobs = toSignal(this._filteredJobs$);
 
   onFilterChange(filters: Filter) {
@@ -99,7 +77,7 @@ export class JobsComponent {
   protected readonly fakeJobListingCards = fakeJobListingCards;
 
   previewJob(jobId: number) {
-    this.selectedJob$$.next(jobId);
+    this.store.fetchJobDetails(jobId);
     // this.store.updateSelectedJobIdTest(jobId);
   }
 }

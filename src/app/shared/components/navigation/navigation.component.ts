@@ -13,11 +13,20 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { debounceTime, filter, fromEvent, of, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BadgeModule } from 'primeng/badge';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { NgClass, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [Button, MenuModule, BadgeModule],
+  imports: [
+    Button,
+    MenuModule,
+    BadgeModule,
+    OverlayPanelModule,
+    NgClass,
+    NgForOf,
+  ],
   templateUrl: './navigation.component.html',
   styleUrl: './navigation.component.scss',
   animations: [
@@ -36,6 +45,33 @@ export class NavigationComponent implements AfterViewInit {
   @HostBinding('class.no-scroll') get noScroll() {
     return this.isMobileMenu;
   }
+
+  mockNotifications = [
+    {
+      title: 'Software Engineer',
+      company: 'ABC Corp',
+      location: 'Location1',
+      datePosted: '1 day ago',
+      iconClass: 'text-blue-500',
+      bgColor: 'bg-blue-50',
+    },
+    {
+      title: 'UI/UX Designer',
+      company: 'XYZ Ltd',
+      location: 'Location2',
+      datePosted: '2 days ago',
+      iconClass: 'text-green-500',
+      bgColor: 'bg-green-50',
+    },
+    {
+      title: 'Project Manager',
+      company: '123 Inc',
+      location: 'Location3',
+      datePosted: '3 days ago',
+      iconClass: 'text-yellow-500',
+      bgColor: 'bg-yellow-50',
+    },
+  ];
 
   public navHeight: number | undefined;
 

@@ -1,3 +1,7 @@
 .p-button {
   padding: 8px 14px;
+  
+  &.p-button-primary {
+    color: white;
+  }
 }
