@@ -4,14 +4,11 @@ import {
   JobSearchFilterComponent,
 } from './job-search-filter/job-search-filter.component';
 import { JobCardListingComponent } from './job-card-listing/job-card-listing.component';
-import {
-  fakeFullJobDetails,
-  fakeJobListingCards,
-} from '../../shared/data/fake-data';
-import { BehaviorSubject, delay, map, startWith, Subject, tap } from 'rxjs';
+import { fakeJobListingCards } from '../../shared/data/fake-data';
+import { BehaviorSubject, map, startWith, Subject, tap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { JobPreviewComponent } from './job-preview/job-preview.component';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { JobsStore } from './state/jobs.store';
 
 @Component({
@@ -22,6 +19,7 @@ import { JobsStore } from './state/jobs.store';
     JobCardListingComponent,
     JobPreviewComponent,
     AsyncPipe,
+    JsonPipe,
   ],
   templateUrl: './jobs.component.html',
   styleUrl: './jobs.component.scss',
@@ -75,16 +73,20 @@ export class JobsComponent {
   );
 
   selectedJob$$ = new Subject<number>();
+  // selectedJob$ = this.selectedJob$$.pipe(
+  //   startWith(fakeFullJobDetails[0].id),
+  //   tap(() => this.isLoading$.next(true)),
+  //   delay(1000),
+  //   map((jobId) => {
+  //     const job = fakeFullJobDetails.find((job) => job.id === jobId);
+  //     this.store.updateSelectedJobId(job?.id as number);
+  //     return job;
+  //   }),
+  //   tap(() => this.isLoading$.next(false)),
+  // );
+
   selectedJob$ = this.selectedJob$$.pipe(
-    startWith(fakeFullJobDetails[0].id),
-    tap(() => this.isLoading$.next(true)),
-    delay(1000),
-    map((jobId) => {
-      const job = fakeFullJobDetails.find((job) => job.id === jobId);
-      this.store.updateSelectedJobId(job?.id as number);
-      return job;
-    }),
-    tap(() => this.isLoading$.next(false)),
+    tap((jobId) => this.store.fetchJobDetails(jobId)),
   );
 
   selectedJob = toSignal(this.selectedJob$);
@@ -98,5 +100,6 @@ export class JobsComponent {
 
   previewJob(jobId: number) {
     this.selectedJob$$.next(jobId);
+    // this.store.updateSelectedJobIdTest(jobId);
   }
 }

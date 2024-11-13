@@ -1,5 +1,4 @@
 <app-job-search-filter (filtersChanged)="onFilterChange($event)"></app-job-search-filter>
-
 <section class="bg-blue-100 ">
   <div class="container mx-auto p-4 h-full">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 h-full">
@@ -13,8 +12,8 @@
       </div>
       <div class="md:col-span-3 h-full sticky top-3 h-max">
         <app-job-preview
-          [isLoading]="(isLoading$ | async) ?? false"
-          [job]="selectedJob()"
+          [isLoading]="store.isLoading()"
+          [job]="store.selectedJobDetails()"
           class="h-full">
         </app-job-preview>
       </div>

@@ -13,6 +13,7 @@ import {
 import {
   FormBuilder,
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -81,7 +82,7 @@ export class JobSearchFilterComponent {
 
   private _fb: FormBuilder = inject(FormBuilder);
 
-  jobSearchForm = this._fb.group({
+  jobSearchForm = new FormGroup({
     selectedRoles: this._fb.control<string[]>([]),
     selectedLocation: this._fb.control<string[]>([]),
     selectedJobTypes: this._fb.control<string[]>([]),
