@@ -11,7 +11,7 @@ type JobsState = {
 };
 
 export const initialState: JobsState = {
-  isLoading: false,
+  isLoading: true,
   selectedJobId: undefined,
   jobs: [],
   selectedJobDetails: undefined,
