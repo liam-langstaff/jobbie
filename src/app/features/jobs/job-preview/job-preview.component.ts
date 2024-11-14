@@ -22,4 +22,6 @@ import { Ripple } from 'primeng/ripple';
 export class JobPreviewComponent {
   isLoading = input<boolean>(false);
   public job: any = input<JobDetails>();
+
+  saveJob() {}
 }

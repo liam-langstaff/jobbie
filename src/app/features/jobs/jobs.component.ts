@@ -66,18 +66,9 @@ export class JobsComponent {
     }),
   );
 
-  selectedJob$$ = new Subject<number>();
-
   filteredJobs = toSignal(this._filteredJobs$);
 
   onFilterChange(filters: Filter) {
     this._filteredJobs$$.next(filters);
-  }
-
-  protected readonly fakeJobListingCards = fakeJobListingCards;
-
-  previewJob(jobId: number) {
-    this.store.fetchJobDetails(jobId);
-    // this.store.updateSelectedJobIdTest(jobId);
   }
 }
