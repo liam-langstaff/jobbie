@@ -24,8 +24,6 @@ import { JobsStore } from './state/jobs.store';
 export class JobsComponent {
   readonly store = inject(JobsStore);
 
-  public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
   // TODO: Add filtering to BE
   private readonly _filteredJobs$$: Subject<Filter> = new Subject();
   private readonly _filteredJobs$ = this._filteredJobs$$.pipe(
