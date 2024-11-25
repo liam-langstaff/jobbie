@@ -7,37 +7,39 @@ import {
   inject,
   ViewChild,
 } from '@angular/core';
-import { Button } from 'primeng/button';
+import {Button, ButtonDirective} from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { debounceTime, filter, fromEvent, of, switchMap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {debounceTime, filter, fromEvent, map, of, startWith, switchMap} from 'rxjs';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { NgClass, NgForOf } from '@angular/common';
+import {Ripple} from 'primeng/ripple';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 @Component({
-  selector: 'app-navigation',
-  standalone: true,
+    selector: 'app-navigation',
   imports: [
     Button,
     MenuModule,
     BadgeModule,
     OverlayPanelModule,
     NgClass,
-    NgForOf,
+    ButtonDirective,
+    Ripple,
   ],
-  templateUrl: './navigation.component.html',
-  styleUrl: './navigation.component.scss',
-  animations: [
-    trigger('myInsertRemoveTrigger', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('100ms', style({ opacity: 1 })),
-      ]),
-      transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
-    ]),
-  ],
+    templateUrl: './navigation.component.html',
+    styleUrl: './navigation.component.scss',
+    animations: [
+        trigger('myInsertRemoveTrigger', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('100ms', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
+        ]),
+    ]
 })
 export class NavigationComponent implements AfterViewInit {
   @ViewChild('nav') navigation: ElementRef | undefined;
@@ -76,11 +78,16 @@ export class NavigationComponent implements AfterViewInit {
   public navHeight: number | undefined;
 
   public isMobileMenu: boolean = false;
+  public hideNavbar: boolean = false;
 
   items = [
     {
       label: 'Options',
       items: [
+        {
+          label: 'Profile',
+          icon: 'pi pi-user',
+        },
         {
           label: 'Logout',
           icon: 'pi pi-sign-out',
@@ -90,6 +97,19 @@ export class NavigationComponent implements AfterViewInit {
   ];
 
   private readonly _destroyRef$: DestroyRef = inject(DestroyRef);
+  public router = inject(Router);
+  public activatedRoute = inject(ActivatedRoute);
+  private readonly _hiddenRoutes = ['login', 'register']
+
+  public readonly _hideNavbar = toSignal(this.router.events.pipe(
+    filter(event => event instanceof NavigationEnd),
+    map(() => {
+      const currentRoute = this.activatedRoute.snapshot.firstChild?.routeConfig?.path;
+      return this._hiddenRoutes.includes(currentRoute || '');
+    }),
+    takeUntilDestroyed(this._destroyRef$)
+  ))
+
 
   public readonly _resize$ = fromEvent(window, 'resize').pipe(
     debounceTime(150),

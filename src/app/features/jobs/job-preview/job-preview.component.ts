@@ -6,18 +6,17 @@ import { ButtonDirective } from 'primeng/button';
 import { Ripple } from 'primeng/ripple';
 
 @Component({
-  selector: 'app-job-preview',
-  standalone: true,
-  imports: [
-    CurrencyPipe,
-    DatePipe,
-    NgForOf,
-    SkeletonModule,
-    ButtonDirective,
-    Ripple,
-  ],
-  templateUrl: './job-preview.component.html',
-  styleUrl: './job-preview.component.scss',
+    selector: 'app-job-preview',
+    imports: [
+        CurrencyPipe,
+        DatePipe,
+        NgForOf,
+        SkeletonModule,
+        ButtonDirective,
+        Ripple,
+    ],
+    templateUrl: './job-preview.component.html',
+    styleUrl: './job-preview.component.scss'
 })
 export class JobPreviewComponent {
   isLoading = input<boolean>(false);

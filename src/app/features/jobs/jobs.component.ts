@@ -11,15 +11,14 @@ import { JobPreviewComponent } from './job-preview/job-preview.component';
 import { JobsStore } from './state/jobs.store';
 
 @Component({
-  selector: 'app-jobs',
-  standalone: true,
-  imports: [
-    JobSearchFilterComponent,
-    JobCardListingComponent,
-    JobPreviewComponent,
-  ],
-  templateUrl: './jobs.component.html',
-  styleUrl: './jobs.component.scss',
+    selector: 'app-jobs',
+    imports: [
+        JobSearchFilterComponent,
+        JobCardListingComponent,
+        JobPreviewComponent,
+    ],
+    templateUrl: './jobs.component.html',
+    styleUrl: './jobs.component.scss'
 })
 export class JobsComponent {
   readonly store = inject(JobsStore);

@@ -13,6 +13,10 @@
 
 @layer tailwind-base {
   @tailwind base;
+  input, optgroup, select, textarea {
+    padding: 5px;
+    color: black;
+  }
 }
 
 @layer base {
@@ -38,3 +42,7 @@
 }
 
 @layer primeng;
+
+html {
+  min-height: 100%;
+}

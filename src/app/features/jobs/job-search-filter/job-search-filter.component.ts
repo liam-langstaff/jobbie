@@ -57,24 +57,23 @@ export interface Filter {
 }
 
 @Component({
-  selector: 'app-job-search-filter',
-  standalone: true,
-  imports: [
-    AutoCompleteModule,
-    FormsModule,
-    Button,
-    ButtonDirective,
-    Ripple,
-    SliderModule,
-    MultiSelectModule,
-    CurrencyPipe,
-    OverlayPanelModule,
-    AsyncPipe,
-    ReactiveFormsModule,
-    DropdownModule,
-  ],
-  templateUrl: './job-search-filter.component.html',
-  styleUrl: './job-search-filter.component.scss',
+    selector: 'app-job-search-filter',
+    imports: [
+        AutoCompleteModule,
+        FormsModule,
+        Button,
+        ButtonDirective,
+        Ripple,
+        SliderModule,
+        MultiSelectModule,
+        CurrencyPipe,
+        OverlayPanelModule,
+        AsyncPipe,
+        ReactiveFormsModule,
+        DropdownModule,
+    ],
+    templateUrl: './job-search-filter.component.html',
+    styleUrl: './job-search-filter.component.scss'
 })
 export class JobSearchFilterComponent {
   @Output() filtersChanged = new EventEmitter<Filter>();

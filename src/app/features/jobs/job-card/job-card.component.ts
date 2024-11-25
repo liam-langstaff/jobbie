@@ -4,11 +4,10 @@ import { CurrencyPipe, NgClass, NgIf } from '@angular/common';
 import { JobsStore } from '../state/jobs.store';
 
 @Component({
-  selector: 'app-job-card',
-  standalone: true,
-  imports: [NgIf, CurrencyPipe, NgClass],
-  templateUrl: './job-card.component.html',
-  styleUrl: './job-card.component.scss',
+    selector: 'app-job-card',
+    imports: [NgIf, CurrencyPipe, NgClass],
+    templateUrl: './job-card.component.html',
+    styleUrl: './job-card.component.scss'
 })
 export class JobCardComponent {
   public readonly store = inject(JobsStore);
