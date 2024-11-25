@@ -12,8 +12,8 @@ export class SupabaseService {
   currentUser = signal<{ email: string; username: string } | null>(null);
 
   register(
-    email: string,
     username: string,
+    email: string,
     password: string
   ): Observable<AuthResponse> {
     const promise = this.supabase.auth.signUp({

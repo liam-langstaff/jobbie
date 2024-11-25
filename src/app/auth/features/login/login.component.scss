@@ -2,3 +2,25 @@
   background: rgb(17, 24, 39);
   background: linear-gradient(56deg, rgba(17, 24, 39, 1) 0%, rgba(17, 24, 39, 1) 43%, rgba(9, 9, 121, 1) 72%, rgba(17, 24, 39, 1) 100%);
 }
+.auth-usp {
+  position: relative;
+  background-image: url('https://source.unsplash.com/WHWYBmtn3');
+  background-size: cover;
+  background-position: center;
+}
+
+.auth-usp::before {
+  //content: '';
+  //position: absolute;
+  //top: 0;
+  //left: 0;
+  //width: 100%;
+  //height: 100%;
+  //background: rgba(0, 0, 255, 0.3); /* Adjust based on the desired blue hue intensity */
+  //z-index: 1;
+}
+
+.auth-usp > * {
+  //position: relative;
+  //z-index: 2;
+}

@@ -19,7 +19,7 @@
       <div>
         <h1 class="text-4xl">Welcome back</h1>
         <p class="mt-3 mb-8">Sign into your account</p>
-        <form>
+        <form (ngSubmit)="login()">
           <div class="flex flex-col gap-2">
             <label for="email">Email address</label>
             <input
@@ -40,7 +40,7 @@
               [formControl]="password" />
           </div>
 
-          <button pButton type="button" label="Login" class="w-full mt-6"></button>
+          <button [loading]="isLoading()" type="submit" pButton label="Login" class="w-full mt-6"></button>
           <div class="flex justify-between items-center mt-4">
             <p>Forgot password?</p>
             <p-button type="button" [link]="true" [routerLink]="['/register']" label="Don't have an account?"></p-button>
@@ -50,5 +50,5 @@
 
     </div>
   </div>
-  <div class="auth-usp flex-grow h-screen bg-gray-900"></div>
+  <div class="auth-usp flex-grow h-screen bg-gray-900 bg-working"></div>
 </div>

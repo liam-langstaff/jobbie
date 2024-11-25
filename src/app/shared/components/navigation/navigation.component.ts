@@ -17,6 +17,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { NgClass, NgForOf } from '@angular/common';
 import {Ripple} from 'primeng/ripple';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {SupabaseService} from '../../services/supabase.service';
 
 @Component({
     selector: 'app-navigation',
@@ -47,6 +48,8 @@ export class NavigationComponent implements AfterViewInit {
   @HostBinding('class.no-scroll') get noScroll() {
     return this.isMobileMenu;
   }
+
+  supabaseService = inject(SupabaseService);
 
   mockNotifications = [
     {
@@ -91,6 +94,9 @@ export class NavigationComponent implements AfterViewInit {
         {
           label: 'Logout',
           icon: 'pi pi-sign-out',
+          command: () => {
+            this.supabaseService.logout();
+          },
         },
       ],
     },
