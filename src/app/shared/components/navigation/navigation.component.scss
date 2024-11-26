@@ -20,6 +20,11 @@ nav li {
   }
 }
 
+.unread {
+  border: 2px solid var(--orange-500);
+  border-radius: 3px;
+}
+
 #mobile-menu {
   max-height: calc(100vh);
   overflow-y: auto;

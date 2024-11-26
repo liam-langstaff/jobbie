@@ -8,9 +8,12 @@ import { environment } from '../../../environments/environment';
 })
 export class SupabaseService {
   supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-  currentUser = signal<{ email: string; username: string; id: string } | null>(
-    null,
-  );
+  currentUser = signal<{
+    email: string;
+    username: string;
+    id: string;
+    type: string;
+  } | null>(null);
 
   register(
     username: string,

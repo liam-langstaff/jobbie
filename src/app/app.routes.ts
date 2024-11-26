@@ -4,7 +4,7 @@ import { RegisterComponent } from './auth/features/register/register.component';
 import { LoginComponent } from './auth/features/login/login.component';
 import { HiringComponent } from './features/hiring/hiring.component';
 import { CreateListingComponent } from './features/hiring/create-listing/create-listing.component';
-import { authGuard } from './shared/guards/auth.guard';
+import { organisationGuard } from './shared/guards/organisation.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'jobs', pathMatch: 'full' },
@@ -16,7 +16,7 @@ export const routes: Routes = [
       {
         path: 'create/listing',
         component: CreateListingComponent,
-        canActivate: [authGuard],
+        canActivate: [organisationGuard],
       },
     ],
   },

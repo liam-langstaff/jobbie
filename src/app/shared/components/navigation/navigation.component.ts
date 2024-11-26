@@ -6,7 +6,9 @@ import {
   HostBinding,
   inject,
   OnInit,
+  signal,
   ViewChild,
+  WritableSignal,
 } from '@angular/core';
 import { Button, ButtonDirective } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -14,7 +16,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { debounceTime, filter, fromEvent, map, of, switchMap } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { BadgeModule } from 'primeng/badge';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { NgClass } from '@angular/common';
 import { Ripple } from 'primeng/ripple';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -101,6 +103,13 @@ export class NavigationComponent implements AfterViewInit, OnInit {
             this.supabaseService.logout();
           },
         },
+        {
+          label: 'Send test notification',
+          icon: 'pi pi-bell',
+          command: () => {
+            this.notificationService.sendTestNotification();
+          },
+        },
       ],
     },
   ];
@@ -111,11 +120,14 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   private readonly _hiddenRoutes = ['login', 'register'];
   notifications: Notification[] = [];
   notificationService: NotificationsService = inject(NotificationsService);
+  unreadCount: WritableSignal<number> = signal(0);
 
   ngOnInit() {
     this.notificationService.notifications$.subscribe((notifications) => {
-      console.log(notifications);
       this.notifications = notifications;
+      this.unreadCount.set(
+        notifications.filter((notification) => !notification.read).length ?? 0,
+      );
     });
   }
 
@@ -137,6 +149,19 @@ export class NavigationComponent implements AfterViewInit, OnInit {
     switchMap(() => of(false)),
     takeUntilDestroyed(this._destroyRef$),
   );
+
+  constructor() {
+    this.supabaseService.supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications' },
+        () => {
+          this.notificationService.fetchNotifications();
+        },
+      )
+      .subscribe();
+  }
 
   public ngAfterViewInit() {
     this.navHeight = this.navigation?.nativeElement.offsetHeight;
@@ -172,5 +197,20 @@ export class NavigationComponent implements AfterViewInit, OnInit {
       default:
         return '';
     }
+  }
+
+  async openNotifications(notificationMenu: OverlayPanel, $event: MouseEvent) {
+    notificationMenu.toggle($event);
+    const unreadNotifications = this.notifications.filter(
+      (notification) => !notification.read,
+    );
+    unreadNotifications.forEach((notification) => {
+      notification.read = true;
+      this.notificationService.markNotificationAsRead(notification.id);
+    });
+  }
+
+  private sendLogoutNotification() {
+    return this.notificationService.sendTestNotification();
   }
 }
