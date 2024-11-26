@@ -7,6 +7,10 @@ li {
   }
 }
 
+::ng-deep .p-badge-hidden > button span.p-badge {
+  display: none;
+}
+
 nav li {
   padding: 1.5rem 0;
   border-bottom: 2px solid var(--gray-900);

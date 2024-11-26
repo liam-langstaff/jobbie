@@ -5,22 +5,25 @@ import {
   ElementRef,
   HostBinding,
   inject,
+  OnInit,
   ViewChild,
 } from '@angular/core';
-import {Button, ButtonDirective} from 'primeng/button';
+import { Button, ButtonDirective } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { animate, style, transition, trigger } from '@angular/animations';
-import {debounceTime, filter, fromEvent, map, of, startWith, switchMap} from 'rxjs';
-import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
+import { debounceTime, filter, fromEvent, map, of, switchMap } from 'rxjs';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { NgClass, NgForOf } from '@angular/common';
-import {Ripple} from 'primeng/ripple';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {SupabaseService} from '../../services/supabase.service';
+import { NgClass } from '@angular/common';
+import { Ripple } from 'primeng/ripple';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { SupabaseService } from '../../services/supabase.service';
+import { NotificationsService } from '../../services/notifications.service';
+import { Notification } from '../../types/notification.interface';
 
 @Component({
-    selector: 'app-navigation',
+  selector: 'app-navigation',
   imports: [
     Button,
     MenuModule,
@@ -30,19 +33,19 @@ import {SupabaseService} from '../../services/supabase.service';
     ButtonDirective,
     Ripple,
   ],
-    templateUrl: './navigation.component.html',
-    styleUrl: './navigation.component.scss',
-    animations: [
-        trigger('myInsertRemoveTrigger', [
-            transition(':enter', [
-                style({ opacity: 0 }),
-                animate('100ms', style({ opacity: 1 })),
-            ]),
-            transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
-        ]),
-    ]
+  templateUrl: './navigation.component.html',
+  styleUrl: './navigation.component.scss',
+  animations: [
+    trigger('myInsertRemoveTrigger', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('100ms', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
+    ]),
+  ],
 })
-export class NavigationComponent implements AfterViewInit {
+export class NavigationComponent implements AfterViewInit, OnInit {
   @ViewChild('nav') navigation: ElementRef | undefined;
 
   @HostBinding('class.no-scroll') get noScroll() {
@@ -105,17 +108,28 @@ export class NavigationComponent implements AfterViewInit {
   private readonly _destroyRef$: DestroyRef = inject(DestroyRef);
   public router = inject(Router);
   public activatedRoute = inject(ActivatedRoute);
-  private readonly _hiddenRoutes = ['login', 'register']
+  private readonly _hiddenRoutes = ['login', 'register'];
+  notifications: Notification[] = [];
+  notificationService: NotificationsService = inject(NotificationsService);
 
-  public readonly _hideNavbar = toSignal(this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd),
-    map(() => {
-      const currentRoute = this.activatedRoute.snapshot.firstChild?.routeConfig?.path;
-      return this._hiddenRoutes.includes(currentRoute || '');
-    }),
-    takeUntilDestroyed(this._destroyRef$)
-  ))
+  ngOnInit() {
+    this.notificationService.notifications$.subscribe((notifications) => {
+      console.log(notifications);
+      this.notifications = notifications;
+    });
+  }
 
+  public readonly _hideNavbar = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => {
+        const currentRoute =
+          this.activatedRoute.snapshot.firstChild?.routeConfig?.path;
+        return this._hiddenRoutes.includes(currentRoute || '');
+      }),
+      takeUntilDestroyed(this._destroyRef$),
+    ),
+  );
 
   public readonly _resize$ = fromEvent(window, 'resize').pipe(
     debounceTime(150),
@@ -138,6 +152,25 @@ export class NavigationComponent implements AfterViewInit {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+    }
+  }
+
+  async markAsRead(notificationId: string) {
+    await this.notificationService.markNotificationAsRead(notificationId);
+  }
+
+  getNotificationBadgeClass(type: string): string {
+    switch (type) {
+      case 'info':
+        return 'notification-badge-info';
+      case 'warning':
+        return 'notification-badge-warning';
+      case 'error':
+        return 'notification-badge-error';
+      case 'success':
+        return 'notification-badge-success';
+      default:
+        return '';
     }
   }
 }

@@ -1,5 +1,6 @@
 <div class="auth--container flex min-h-screen">
-  <div class="auth-provider w-1/3 flex flex-col border-r border-blue-800 flex-shrink-0 px-5 pt-16 pb-8 shadow-lg bg-studio border-default">
+  <div
+    class="auth-provider w-1/3 max-w-[510px] flex flex-col border-r border-blue-800 flex-shrink-0 px-5 pt-16 pb-8 shadow-lg bg-studio border-default">
     <header class="auth-provider--header">
       <button [routerLink]="['/']">
         <span>
@@ -27,7 +28,7 @@
               id="email"
               type="email"
               aria-describedby="email-help"
-              [formControl]="email" />
+              [formControl]="email"/>
           </div>
 
           <div class="flex flex-col gap-2 mt-4">
@@ -37,13 +38,14 @@
               id="password"
               type="password"
               aria-describedby="password-help"
-              [formControl]="password" />
+              [formControl]="password"/>
           </div>
 
           <button [loading]="isLoading()" type="submit" pButton label="Login" class="w-full mt-6"></button>
           <div class="flex justify-between items-center mt-4">
             <p>Forgot password?</p>
-            <p-button type="button" [link]="true" [routerLink]="['/register']" label="Don't have an account?"></p-button>
+            <p-button type="button" [link]="true" [routerLink]="['/register']"
+                      label="Don't have an account?"></p-button>
           </div>
         </form>
       </div>

@@ -5,3 +5,8 @@ h1, h2, h3, h4, h5, h6, nav {
 p, span {
   font-family: "Karla", sans-serif;
 }
+
+@mixin usp-gradient {
+  background: rgb(17, 24, 39);
+  background: linear-gradient(56deg, rgba(17, 24, 39, 1) 0%, rgba(17, 24, 39, 1) 43%, rgba(9, 9, 121, 1) 72%, rgba(17, 24, 39, 1) 100%);
+}

@@ -1,3 +1,5 @@
+@use '../../../../assets/styles/typography.scss' as typography;
+
 .custom-autocomplete {
   .p-autocomplete-input-token {
     padding: 22px;
@@ -5,6 +7,5 @@
 }
 
 .job-search-filter-component {
-  background: rgb(17, 24, 39);
-  background: linear-gradient(56deg, rgba(17, 24, 39, 1) 0%, rgba(17, 24, 39, 1) 43%, rgba(9, 9, 121, 1) 72%, rgba(17, 24, 39, 1) 100%);
+  @include typography.usp-gradient;
 }

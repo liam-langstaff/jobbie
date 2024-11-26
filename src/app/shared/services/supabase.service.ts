@@ -1,20 +1,23 @@
-import {Injectable, signal} from '@angular/core';
-import {from, Observable} from 'rxjs';
-import {AuthResponse, createClient} from '@supabase/supabase-js';
-import {environment} from '../../../environments/environment';
+import { Injectable, signal } from '@angular/core';
+import { from, Observable } from 'rxjs';
+import { AuthResponse, createClient } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupabaseService {
-
   supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-  currentUser = signal<{ email: string; username: string } | null>(null);
+  currentUser = signal<{ email: string; username: string; id: string } | null>(
+    null,
+  );
 
   register(
     username: string,
     email: string,
-    password: string
+    password: string,
+    type: 'personal' | 'organization',
+    organisation?: string,
   ): Observable<AuthResponse> {
     const promise = this.supabase.auth.signUp({
       email,
@@ -22,6 +25,8 @@ export class SupabaseService {
       options: {
         data: {
           username,
+          type,
+          organization: organisation ?? null,
         },
       },
     });

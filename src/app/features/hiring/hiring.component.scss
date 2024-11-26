@@ -1,0 +1,5 @@
+@use '../../../assets/styles/typography.scss' as typography;
+
+.hiring-page {
+  @include typography.usp-gradient;
+}

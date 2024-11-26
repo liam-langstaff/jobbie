@@ -2,7 +2,6 @@
   <div class="container mx-auto px-4">
     <h3 class="text-5xl mb-2">Find your next role today</h3>
     <p class="mb-8">Looking for jobs? Browse our latest job openings to view & apply</p>
-
   </div>
   <div class="container mx-auto px-4 sticky top-2">
     <form [formGroup]="jobSearchForm">
@@ -102,14 +101,14 @@
         </div>
       </div>
 
-      @if(true) {
-        <div  class="additional-filters filters gap-4 flex flex-wrap w-full items-stretch mt-4">
+      @if (true) {
+        <div class="additional-filters filters gap-4 flex flex-wrap w-full items-stretch mt-4">
           <div class="w-full xl:w-auto flex items-center">
             <div class="flex items-center">
               <p-dropdown
                 [options]="fakeLocations"
                 optionLabel="label"
-                placeholder="Date posted" />
+                placeholder="Date posted"/>
             </div>
           </div>
 
@@ -118,7 +117,7 @@
               <p-dropdown
                 [options]="fakeLocations"
                 optionLabel="label"
-                placeholder="Posted by" />
+                placeholder="Posted by"/>
             </div>
           </div>
 
@@ -127,7 +126,7 @@
               <p-dropdown
                 [options]="fakeLocations"
                 optionLabel="label"
-                placeholder="Education level" />
+                placeholder="Education level"/>
             </div>
           </div>
 
@@ -136,7 +135,7 @@
               <p-dropdown
                 [options]="fakeLocations"
                 optionLabel="label"
-                placeholder="Industry" />
+                placeholder="Industry"/>
             </div>
           </div>
 
@@ -145,7 +144,7 @@
               <p-dropdown
                 [options]="fakeLocations"
                 optionLabel="label"
-                placeholder="Company" />
+                placeholder="Company"/>
             </div>
           </div>
         </div>
