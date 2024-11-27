@@ -25,7 +25,7 @@
                       [ngClass]="{ 'p-badge-hidden': !unreadCount() }"
                       [badge]="unreadCount().toString()"
                       [badgeClass]="'p-badge-warning'" [rounded]="true" [outlined]="true" severity="secondary"/>
-            <p-overlayPanel #notificationMenu [style]="{ width: '450px' }">
+            <p-overlayPanel #notificationMenu [style]="{ width: '450px', maxHeight: '500px', overflowY: 'scroll' }">
               <ng-template pTemplate="content">
                 <div class="py-3">
                   <h3 class="text-lg font-semibold mb-4">Notifications</h3>
@@ -47,7 +47,7 @@
             </p-overlayPanel>
             <p-button (onClick)="menu.toggle($event)" icon="pi pi-cog" [rounded]="true" [outlined]="true"
                       severity="secondary"/>
-            <p-menu #menu [model]="items" [popup]="true"/>
+            <p-menu [style]="{ width: '250px'}" #menu [model]="items" [popup]="true"/>
           }
           @if (!supabaseService.currentUser()) {
             <button

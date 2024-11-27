@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, scan } from 'rxjs';
 import { SupabaseService } from './supabase.service';
 import { Notification } from '../types/notification.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,12 +9,29 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class NotificationsService {
   private notificationsSubject$$ = new BehaviorSubject<Notification[]>([]);
-  notifications$: Observable<Notification[]> =
-    this.notificationsSubject$$.asObservable();
+  notifications$: Observable<Notification[]> = this.notificationsSubject$$.pipe(
+    scan(
+      (prev: Notification[], curr: Notification[]) => [...curr, ...prev],
+      [],
+    ),
+    distinctUntilChanged(), // Ensure not to repeat the same notifications
+  );
   supabaseService: SupabaseService = inject(SupabaseService);
 
   constructor() {
     this.fetchNotifications();
+    this.supabaseService.supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications' },
+        (res) => {
+          console.log('Notification received:', res);
+          this.notificationsSubject$$.next([res.new] as Notification[]);
+          // this.fetchNotifications();
+        },
+      )
+      .subscribe();
   }
 
   async fetchNotifications() {
@@ -43,7 +60,8 @@ export class NotificationsService {
 
     if (!error) {
       console.log('Notification marked as read:', data);
-      await this.fetchNotifications(); // Refresh notifications
+      // remove this as we can set the read reciepts locally. The DB will already have been set but prevent another call
+      // await this.fetchNotifications();
     } else {
       console.error('Error marking notification as read:', error);
     }
@@ -52,9 +70,9 @@ export class NotificationsService {
   async sendTestNotification() {
     // Define a test notification object
     const testNotification = {
-      id: uuidv4(), // You can generate unique UUID dynamically
+      id: uuidv4(),
       user_id: this.supabaseService.currentUser()?.id,
-      title: 'This is a test notification',
+      title: 'Hello!',
       message: 'Thanks for subscribing!',
       timestamp: new Date().toISOString(),
       type: 'info',

@@ -9,7 +9,7 @@
         <!-- Search Job Title or Keyword -->
         <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
           <div class="flex items-center">
-            <span class="pi pi-search mr-2"></span>
+            <i class="pi pi-search mr-2"></i>
             <p-autoComplete
               formControlName="selectedRoles"
               [suggestions]="searchedRole() || []"
@@ -24,7 +24,7 @@
         <!-- Search Location -->
         <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
           <div class="flex items-center">
-            <span class="pi pi-map-marker mr-2"></span>
+            <i class="pi pi-map-marker mr-2"></i>
             <p-autoComplete
               formControlName="selectedLocation"
               [suggestions]="searchedLocation() || []"
@@ -39,7 +39,7 @@
         <!-- Search Job Type using MultiSelect -->
         <div class="border-r border-gray-700 p-4 w-full xl:w-auto flex items-center">
           <div class="flex items-center">
-            <span class="pi pi-briefcase mr-2"></span>
+            <i class="pi pi-briefcase mr-2"></i>
             <p-multiSelect
               formControlName="selectedJobTypes"
               [options]="jobTypes"

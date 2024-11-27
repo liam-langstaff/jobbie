@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   DestroyRef,
+  effect,
   ElementRef,
   HostBinding,
   inject,
@@ -23,6 +24,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { NotificationsService } from '../../services/notifications.service';
 import { Notification } from '../../types/notification.interface';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-navigation',
@@ -88,31 +90,7 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   public isMobileMenu: boolean = false;
   public hideNavbar: boolean = false;
 
-  items = [
-    {
-      label: 'Options',
-      items: [
-        {
-          label: 'Profile',
-          icon: 'pi pi-user',
-        },
-        {
-          label: 'Logout',
-          icon: 'pi pi-sign-out',
-          command: () => {
-            this.supabaseService.logout();
-          },
-        },
-        {
-          label: 'Send test notification',
-          icon: 'pi pi-bell',
-          command: () => {
-            this.notificationService.sendTestNotification();
-          },
-        },
-      ],
-    },
-  ];
+  items: MenuItem[] = [];
 
   private readonly _destroyRef$: DestroyRef = inject(DestroyRef);
   public router = inject(Router);
@@ -121,15 +99,6 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   notifications: Notification[] = [];
   notificationService: NotificationsService = inject(NotificationsService);
   unreadCount: WritableSignal<number> = signal(0);
-
-  ngOnInit() {
-    this.notificationService.notifications$.subscribe((notifications) => {
-      this.notifications = notifications;
-      this.unreadCount.set(
-        notifications.filter((notification) => !notification.read).length ?? 0,
-      );
-    });
-  }
 
   public readonly _hideNavbar = toSignal(
     this.router.events.pipe(
@@ -151,16 +120,58 @@ export class NavigationComponent implements AfterViewInit, OnInit {
   );
 
   constructor() {
-    this.supabaseService.supabase
-      .channel('notifications')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'notifications' },
-        () => {
-          this.notificationService.fetchNotifications();
+    effect(() => {
+      const currentUser = this.supabaseService.currentUser();
+      this.items = [
+        {
+          label: 'Options',
+          items: [
+            {
+              label: 'Profile',
+              icon: 'pi pi-user',
+            },
+            ...(currentUser?.isOrganisation
+              ? [
+                  {
+                    label: 'Organization Settings',
+                    icon: 'pi pi-users',
+                    command: () => {
+                      // Logic for organization settings
+                    },
+                  },
+                ]
+              : []),
+            {
+              label: 'Logout',
+              icon: 'pi pi-sign-out',
+              command: () => {
+                this.supabaseService.logout();
+              },
+            },
+            {
+              label: 'Send test notification',
+              icon: 'pi pi-bell',
+              command: () => {
+                this.notificationService.sendTestNotification();
+              },
+            },
+          ],
         },
-      )
-      .subscribe();
+      ];
+    });
+  }
+
+  ngOnInit() {
+    const userPartOfOrganization =
+      this.supabaseService.currentUser()?.isOrganisation;
+    console.log({ userPartOfOrganization });
+
+    this.notificationService.notifications$.subscribe((notifications) => {
+      this.notifications = notifications;
+      this.unreadCount.set(
+        notifications.filter((notification) => !notification.read).length ?? 0,
+      );
+    });
   }
 
   public ngAfterViewInit() {

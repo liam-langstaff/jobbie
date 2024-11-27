@@ -22,16 +22,15 @@ export class AppComponent implements OnInit {
           email: session?.user.email!,
           username:
             session?.user.identities?.at(0)?.identity_data?.['username'],
+          isOrganisation:
+            session?.user?.user_metadata?.['type'] === 'organisation',
           type: session?.user?.user_metadata?.['type'],
+          organization: session?.user?.user_metadata?.['organization'],
         });
         this._notificationService.fetchNotifications();
       } else if (event === 'SIGNED_OUT') {
         this._supabaseService.currentUser.set(null);
       }
     });
-  }
-
-  logout(): void {
-    this._supabaseService.logout();
   }
 }

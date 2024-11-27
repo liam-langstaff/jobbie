@@ -3,7 +3,7 @@ export interface Notification {
   user_id: string;
   title: string;
   message: string;
-  timestamp: string; // ISO format date string or Date object
+  timestamp: string;
   type: 'info' | 'warning' | 'error' | 'success';
   read: boolean;
 }

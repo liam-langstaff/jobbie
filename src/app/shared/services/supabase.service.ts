@@ -1,7 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { from, Observable } from 'rxjs';
 import { AuthResponse, createClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,12 @@ export class SupabaseService {
     email: string;
     username: string;
     id: string;
-    type: string;
+    isOrganisation: boolean;
+    type: 'personal' | 'organization';
+    organization: string | null;
   } | null>(null);
+
+  private _router: Router = inject(Router);
 
   register(
     username: string,
@@ -45,6 +50,8 @@ export class SupabaseService {
   }
 
   logout(): void {
-    this.supabase.auth.signOut();
+    this.supabase.auth.signOut().then(() => {
+      this._router.navigate(['/login']);
+    });
   }
 }
